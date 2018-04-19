@@ -6,6 +6,7 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.stereotype.Service;
 
 import com.eyun.commission.domain.Greeting;
+import com.eyun.commission.kafka.ConsumerChannel;
 
 @Service
 public class ConsumerService {
