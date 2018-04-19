@@ -32,6 +32,15 @@ spring:
             enabled: false
         livereload:
             enabled: false
+    cloud:
+        stream:
+            kafka:
+                binder:
+                    brokers: localhost
+                    zk-nodes: localhost
+            bindings:
+                output:
+                    destination: topic-jhipster
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:mysql://localhost:3306/commission?useUnicode=true&characterEncoding=utf8&useSSL=false

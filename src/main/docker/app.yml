@@ -8,10 +8,22 @@ services:
             - SPRING_CLOUD_CONFIG_URI=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/config
             - SPRING_DATASOURCE_URL=jdbc:mysql://commission-mysql:3306/commission?useUnicode=true&characterEncoding=utf8&useSSL=false
             - JHIPSTER_SLEEP=30 # gives time for the JHipster Registry to boot before the application
+            - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka
+            - SPRING_CLOUD_STREAM_KAFKA_BINDER_ZK_NODES=zookeeper
     commission-mysql:
         extends:
             file: mysql.yml
             service: commission-mysql
+    kafka:
+        extends:
+            file: kafka.yml
+            service: kafka
+        environment:
+            - KAFKA_ADVERTISED_HOST_NAME=kafka
+    zookeeper:
+        extends:
+            file: kafka.yml
+            service: zookeeper
     jhipster-registry:
         extends:
             file: jhipster-registry.yml
