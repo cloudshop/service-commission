@@ -27,6 +27,15 @@ spring:
         serialization.write_dates_as_timestamps: false
     cache:
         type: simple
+    cloud:
+        stream:
+            kafka:
+                binder:
+                    brokers: localhost
+                    zk-nodes: localhost
+            bindings:
+                output:
+                    destination: topic-jhipster
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:h2:mem:commission;DB_CLOSE_DELAY=-1
@@ -91,7 +100,7 @@ jhipster:
     security:
         authentication:
             jwt:
-                secret: bc430a650dac364806392cb7d340396f4d17d93e
+                secret: 6cc74750ba22f93fc57ba1a17a915a6ecc0a95b6
                 # Token is valid 24 hours
                 token-validity-in-seconds: 86400
         client-authorization:
