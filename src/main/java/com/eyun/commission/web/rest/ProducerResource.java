@@ -20,12 +20,14 @@ public class ProducerResource {
         this.channel = channel.messageChannel();
     }
 
-    @GetMapping("/greetings/{count}")
+    @GetMapping("/greetings/{messages}")
     @Timed
-    public void produce(@PathVariable int count) {
-        while(count > 0) {
-            channel.send(MessageBuilder.withPayload(new Greeting().setMessage("Hello world!: " + count)).build());
-            count--;
-        }
+    public void produce(@PathVariable String messages) {
+
+        System.out.println("收到消息"+messages);
+            channel.send(MessageBuilder.withPayload(messages).build());
+
+
+
     }
 }
