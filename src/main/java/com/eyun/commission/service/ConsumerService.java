@@ -14,7 +14,7 @@ public class ConsumerService {
 
 
     @StreamListener(ConsumerChannel.CHANNEL)
-    public void consume(Greeting greeting) {
-        log.info("Received message: {}.", greeting.getMessage());
+    public void consume(String greeting) {
+        log.info("Received message: {}.", greeting);
     }
 }
