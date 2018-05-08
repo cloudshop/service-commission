@@ -33,6 +33,15 @@ public class SettlementResource {
 	@Autowired
 	private WalletService walletService;
 	
+	/**
+	 * 结算业务 b端and c端
+	 * @author 逍遥子
+	 * @email 756898059@qq.com
+	 * @date 2018年5月8日
+	 * @version 1.0
+	 * @param orderNo
+	 * @throws Exception
+	 */
 	@PostMapping("/order/settlement/{orderNo}")
 	public void orderSettlement(@PathVariable("orderNo") String orderNo) throws Exception {
 		ResponseEntity<ProOrderDTO> resp = orderService.findOrderByOrderNo(orderNo);
