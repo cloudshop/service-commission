@@ -49,9 +49,16 @@ ribbon:
 feign:
     hystrix:
         enabled: true
+        command:
+            default:
+             execution:
+                 isolation:
+                     thread:
+                         timeoutInMilliseconds: 5000
 
 hystrix:
     share-security-context: true
+
 
 management:
     security:

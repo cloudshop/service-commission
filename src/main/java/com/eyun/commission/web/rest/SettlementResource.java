@@ -6,11 +6,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.eyun.commission.service.CommissionService;
 import com.eyun.commission.service.OrderService;
 import com.eyun.commission.service.UserService;
 import com.eyun.commission.service.WalletService;
@@ -32,6 +34,9 @@ public class SettlementResource {
 	
 	@Autowired
 	private WalletService walletService;
+	
+	@Autowired
+	private CommissionService commissionService;
 	
 	@PostMapping("/order/settlement/{orderNo}")
 	public void orderSettlement(@PathVariable("orderNo") String orderNo) throws Exception {
@@ -117,4 +122,15 @@ public class SettlementResource {
 	
 	}
 	
+	/**
+	 * jiangsi
+	 * @param userId
+	 * @throws Exception
+	 */
+	
+	
+	@GetMapping("/serviceProvider/{userId}")
+	public void serviceProviderUpdateAcount(@PathVariable("userId") Long userId) throws Exception {
+		commissionService.joinMoney(userId);
+	}
 }
