@@ -41,6 +41,7 @@ public class CommissionServiceImpl implements CommissionService{
 			//如果为直接商家
 			type = userAnnex.getBody().getType();
 			if(type.equals(5)){
+				System.out.println("-------------------------@@@@@@@@@@---------------" + inviterId);
 				i = i + 1;
 				if(i > 3){
 					break;

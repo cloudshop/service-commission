@@ -20,6 +20,7 @@ import com.eyun.commission.service.dto.ProOrderDTO;
 import com.eyun.commission.service.dto.SettlementWalletDTO;
 import com.eyun.commission.service.dto.UserAnnexDTO;
 
+import io.swagger.annotations.ApiOperation;
 import io.undertow.util.BadRequestException;
 
 @RestController
@@ -128,7 +129,7 @@ public class SettlementResource {
 	 * @throws Exception
 	 */
 	
-	
+	@ApiOperation("链上直接或间接的服务商账户更改")
 	@GetMapping("/serviceProvider/{userId}")
 	public void serviceProviderUpdateAcount(@PathVariable("userId") Long userId) throws Exception {
 		commissionService.joinMoney(userId);
