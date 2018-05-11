@@ -3,13 +3,13 @@ package com.eyun.commission.web.rest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.eyun.commission.service.CommissionService;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.eyun.commission.service.OrderService;
 import com.eyun.commission.service.UserService;
@@ -20,19 +20,23 @@ import com.eyun.commission.service.dto.UserAnnexDTO;
 
 import io.undertow.util.BadRequestException;
 
+import javax.validation.constraints.NotNull;
+
 @RestController
 @RequestMapping("/api")
 public class SettlementResource {
 
 	@Autowired
 	private OrderService orderService;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private WalletService walletService;
-	
+
+	@Autowired
+    CommissionService commissionService;
 	/**
 	 * 结算业务 b端and c端
 	 * @author 逍遥子
@@ -64,23 +68,23 @@ public class SettlementResource {
 		CsettlementWalletDTO.setOrderNo(orderNo);
 		settlementWalletDTOList.add(CsettlementWalletDTO);
 		BigDecimal bUserjifen = transferAmount.multiply(new BigDecimal("2"));//b端获得让利额2倍得积分
-		
+
 		SettlementWalletDTO BsettlementWalletDTO = new SettlementWalletDTO();
 		BsettlementWalletDTO.setUserid(bUserid);
 		BsettlementWalletDTO.setAmount(price);
 		BsettlementWalletDTO.setType(1);
 		BsettlementWalletDTO.setOrderNo(orderNo);
 		settlementWalletDTOList.add(BsettlementWalletDTO);
-		
+
 		SettlementWalletDTO BbsettlementWalletDTO = new SettlementWalletDTO();
 		BbsettlementWalletDTO.setUserid(bUserid);
 		BbsettlementWalletDTO.setAmount(bUserjifen);
 		BbsettlementWalletDTO.setType(3);
 		BbsettlementWalletDTO.setOrderNo(orderNo);
 		settlementWalletDTOList.add(BbsettlementWalletDTO);
-		
+
 		BigDecimal inviterJF = transferAmount.multiply(new BigDecimal("0.10"));
-		
+
 		//获取c端用户上两级用户
 		UserAnnexDTO cUser = userService.getUserAnnex(cUserid).getBody();
 		if (cUser.getInviterId() != null) {
@@ -101,7 +105,7 @@ public class SettlementResource {
 				settlementWalletDTOList.add(CsettlementWalletDTO2);
 			}
 		}
-		
+
 		//获取b端用户上两级用户
 		UserAnnexDTO bUser = userService.getUserAnnex(bUserid).getBody();
 		if (bUser.getInviterId() != null) {
@@ -123,7 +127,51 @@ public class SettlementResource {
 			}
 		}
 		walletService.settlementWallet(settlementWalletDTOList);
-	
+
 	}
-	
+
+    /**
+     * 文亮
+     * 服务商积分分配
+     * @param orderNo
+     */
+    @PostMapping("/order/integralDistribution/{orderNo}")
+	public void integralDistribution(@PathVariable("orderNo") String orderNo) throws Exception{
+        ResponseEntity<ProOrderDTO> resp = orderService.findOrderByOrderNo(orderNo);
+        if (404 == resp.getStatusCodeValue() || resp.getBody().getStatus() != 4) { //校验订单状态
+            throw new BadRequestException("订单异常");
+        }
+
+        ProOrderDTO proOrderDTO = resp.getBody();
+        //拿到店铺的ID，根据店铺的ID查询出店铺邀请人的服务商是谁
+        Long shopId = proOrderDTO.getShopId();
+        //根据店铺ID拿到，店铺持有人的用户的ID
+        Long userId = userService.getShopIdFindByUserid(shopId).getBody();
+        UserAnnexDTO userAnnexDTO = userService.getUserAnnex(userId).getBody();
+        //拿到邀请人的并且的邀请人的ID不能为空和必须的得等于5
+        Long inviterId = userAnnexDTO.getInviterId();
+        UserAnnexDTO inviterUser = null;
+        while (true) {
+            if (userAnnexDTO.getInviterId() != null && userAnnexDTO.getType() == 5) {
+                 inviterUser = userService.getUserAnnex(inviterId).getBody();
+                break;
+            } else if (inviterUser.getInviterId()==null){
+                break;
+
+            }else if (inviterUser.getInviterId()!=null){
+                inviterId = inviterUser.getInviterId();
+            }
+        }
+    }
+
+    /**
+     * 迎新
+     * 服务商现金分配
+     * @param shopId,payment
+     */
+    @GetMapping("/order/facilitator/wallet")
+    public ResponseEntity handleFacilitatorWallet(@NotNull @RequestParam("shopId") Long shopId, @NotNull @RequestParam("payment")BigDecimal payment,@RequestParam("orderNo")String orderNo)throws Exception{
+        String result=commissionService.handleFacilitatorWallet(shopId,payment,orderNo);
+       return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
+    }
 }
