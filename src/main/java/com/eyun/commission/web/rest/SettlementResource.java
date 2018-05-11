@@ -10,7 +10,13 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.eyun.commission.service.CommissionService;
 import com.eyun.commission.service.OrderService;
 import com.eyun.commission.service.UserService;
 import com.eyun.commission.service.WalletService;
@@ -18,6 +24,7 @@ import com.eyun.commission.service.dto.ProOrderDTO;
 import com.eyun.commission.service.dto.SettlementWalletDTO;
 import com.eyun.commission.service.dto.UserAnnexDTO;
 
+import io.swagger.annotations.ApiOperation;
 import io.undertow.util.BadRequestException;
 
 import javax.validation.constraints.NotNull;
@@ -46,6 +53,7 @@ public class SettlementResource {
 	 * @param orderNo
 	 * @throws Exception
 	 */
+
 	@PostMapping("/order/settlement/{orderNo}")
 	public void orderSettlement(@PathVariable("orderNo") String orderNo) throws Exception {
 		ResponseEntity<ProOrderDTO> resp = orderService.findOrderByOrderNo(orderNo);
@@ -174,4 +182,16 @@ public class SettlementResource {
         String result=commissionService.handleFacilitatorWallet(shopId,payment,orderNo);
        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
+
+	/**
+	 * jiangsi
+	 * @param userId
+	 * @throws Exception
+	 */
+
+	@ApiOperation("链上直接或间接的服务商账户更改")
+	@GetMapping("/serviceProvider/{userId}")
+	public void serviceProviderUpdateAcount(@PathVariable("userId") Long userId) throws Exception {
+		commissionService.joinMoney(userId);
+	}
 }
