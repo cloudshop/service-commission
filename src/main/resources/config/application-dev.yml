@@ -24,7 +24,7 @@ eureka:
         prefer-ip-address: true
     client:
         service-url:
-            defaultZone: http://admin:${jhipster.registry.password}@localhost:8761/eureka/
+            defaultZone: http://admin:${jhipster.registry.password}@192.168.1.10:8761/eureka/
 
 spring:
     profiles:
@@ -37,20 +37,13 @@ spring:
             enabled: false # we use gulp + BrowserSync for livereload
     jackson:
         serialization.indent_output: true
-    cloud:
-        stream:
-            kafka:
-                binder:
-                    brokers: localhost
-                    zk-nodes: localhost
-            bindings:
-                output:
-                    destination: topic-jhipster
+
+
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:h2:file:./target/h2db/db/commission;DB_CLOSE_DELAY=-1
-        username: commission
-        password:
+        url: jdbc:mysql://192.168.1.10:3306/commission?useUnicode=true&characterEncoding=utf8&useSSL=false
+        username: root
+        password: z7eh9n6tvk1fPUB8
     h2:
         console:
             enabled: false
