@@ -221,7 +221,7 @@ public class SettlementResource {
                 //TODO 1.扣除当前商户的让利金融
                 System.out.println("扣钱开始--------------------------------------------------------------------------");
                 SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
-                settlementWalletDTO.setUserid(account.getId());
+                settlementWalletDTO.setUserid(formparamsDTO.getUserId());
                 settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
 
                 String messags = walletService.deductmoney(settlementWalletDTO).getBody();
