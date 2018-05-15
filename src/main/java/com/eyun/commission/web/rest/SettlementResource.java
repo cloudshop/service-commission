@@ -216,17 +216,13 @@ public class SettlementResource {
         if (annexDTO.getType()==3||annexDTO.getType()==4){
             //判断商户的越
             WalletDTO wallet = walletService.getUserWalletInfos().getBody();
-            int i = formparamsDTO.getTransferAmount().compareTo(wallet.getBalance());
-            if (i==0||i==1){
-                //TODO 1.扣除当前商户的让利金融
+            //int i = formparamsDTO.getTransferAmount().compareTo(wallet.getBalance());
                 System.out.println("扣钱开始--------------------------------------------------------------------------");
                 SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
                 settlementWalletDTO.setUserid(formparamsDTO.getUserId());
                 settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
-
                 String messags = walletService.deductmoney(settlementWalletDTO).getBody();
                 System.out.println("扣钱结束--------------------------------------------------------------------------");
-                //TODO 2.给用户加积分
                 System.out.println("给用户加积分开始====================================================================");
                 List<SettlementWalletDTO> settlementWalletDTOList = new ArrayList<SettlementWalletDTO>();
                 SettlementWalletDTO CsettlementWalletDTO = new SettlementWalletDTO();
@@ -235,7 +231,7 @@ public class SettlementResource {
                 CsettlementWalletDTO.setType(2);
                 walletService.settlementWallet(settlementWalletDTOList);
                 System.out.println("给用户加积分结束====================================================================");
-            }
+
 
 
         }
