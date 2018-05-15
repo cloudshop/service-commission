@@ -210,9 +210,9 @@ public class SettlementResource {
         //TODO 1.获取商户的ID
         //c端获得让利额10倍得积分,B端要减去的10倍积分
         BigDecimal cUserjifen = formparamsDTO.getTransferAmount().multiply(new BigDecimal("10"));
-        UserDTO account = userUaaService.getAccount();
+
         //拿到商家的信息
-        UserAnnexDTO annexDTO = userService.getUserAnnex(account.getId()).getBody();
+        UserAnnexDTO annexDTO = userService.getUserAnnex(formparamsDTO.getUserId()).getBody();
         if (annexDTO.getType()==3||annexDTO.getType()==4){
             //判断商户的越
             WalletDTO wallet = walletService.getUserWalletInfos().getBody();
