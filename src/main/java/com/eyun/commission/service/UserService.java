@@ -23,4 +23,13 @@ public interface UserService {
     @GetMapping("/api/user-annexes-ShopIdFindByUserid/{shopid}")
     ResponseEntity<Long> getShopIdFindByUserid(@PathVariable("shopid") Long shopid);
 
+
+    /**
+     * 根据用户的电话获取用户的信息
+     * @param phone
+     * @return
+     */
+    @GetMapping("/api/user-annexes-getUserInfosByPhone/{phone}")
+    ResponseEntity<UserAnnexDTO> getUserInfosByPhone(@PathVariable("phone") String phone);
+
 }
