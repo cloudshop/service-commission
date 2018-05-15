@@ -8,6 +8,17 @@ import java.math.BigDecimal;
  */
 public class FormparamsDTO implements Serializable {
 
+
+    private Long userId;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     private String phone;
 
     private BigDecimal ment;
