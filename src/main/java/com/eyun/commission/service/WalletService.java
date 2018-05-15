@@ -6,10 +6,7 @@ import java.util.List;
 import com.eyun.commission.service.dto.UserAnnexDTO;
 import com.eyun.commission.service.dto.WalletDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.eyun.commission.client.AuthorizedFeignClient;
 import com.eyun.commission.service.dto.ServiceProviderChainRewardDTO;
@@ -33,11 +30,11 @@ public interface WalletService {
 
     /**
      * 扣除商户的响应的资金
-     * @param money
+     * @param
      * @return
      */
-    @GetMapping("/api/wallets/Deductmoney/{money}")
-    ResponseEntity<String> deductmoney(@PathVariable(value ="money") BigDecimal money);
+    @PostMapping("/api/wallet/deductmoney")
+    ResponseEntity<String> deductmoney(@RequestBody SettlementWalletDTO settlementWalletDTO);
 
 
 
