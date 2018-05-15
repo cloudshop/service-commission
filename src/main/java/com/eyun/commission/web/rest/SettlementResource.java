@@ -219,17 +219,21 @@ public class SettlementResource {
             int i = formparamsDTO.getTransferAmount().compareTo(wallet.getBalance());
             if (i==0||i==1){
                 //TODO 1.扣除当前商户的让利金融
-
+                System.out.println("扣钱开始--------------------------------------------------------------------------");
+                String messags = walletService.deductmoney(formparamsDTO.getTransferAmount()).getBody();
+                System.out.println("扣钱结束--------------------------------------------------------------------------");
+                System.out.println("给平台加钱开始*********************************************************************");
                 //TODO 2.给平台账户加钱
-
+                System.out.println("给平台加钱结束*********************************************************************");
                 //TODO 2.给用户加积分
-                System.out.println("给用户加积分开始");
+                System.out.println("给用户加积分开始====================================================================");
                 List<SettlementWalletDTO> settlementWalletDTOList = new ArrayList<SettlementWalletDTO>();
                 SettlementWalletDTO CsettlementWalletDTO = new SettlementWalletDTO();
                 CsettlementWalletDTO.setUserid(userAnnexC.getId());
                 CsettlementWalletDTO.setAmount(cUserjifen );
                 CsettlementWalletDTO.setType(2);
                 walletService.settlementWallet(settlementWalletDTOList);
+                System.out.println("给用户加积分结束====================================================================");
 
             }
 
