@@ -37,7 +37,7 @@ public interface WalletService {
      * @return
      */
     @GetMapping("/api/wallets/Deductmoney/{money}")
-    ResponseEntity<String> deductmoney(@PathVariable BigDecimal money);
+    ResponseEntity<String> deductmoney(@PathVariable(value ="money") BigDecimal money);
 
 
 
