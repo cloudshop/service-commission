@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.eyun.commission.service.CommissionService;
+import com.codahale.metrics.annotation.Timed;
+import com.eyun.commission.service.*;
+import com.eyun.commission.service.dto.*;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eyun.commission.service.CommissionService;
-import com.eyun.commission.service.OrderService;
-import com.eyun.commission.service.UserService;
-import com.eyun.commission.service.WalletService;
-import com.eyun.commission.service.dto.ProOrderDTO;
-import com.eyun.commission.service.dto.SettlementWalletDTO;
-import com.eyun.commission.service.dto.UserAnnexDTO;
 
 import io.swagger.annotations.ApiOperation;
 import io.undertow.util.BadRequestException;
@@ -41,6 +38,8 @@ public class SettlementResource {
 
 	@Autowired
 	private WalletService walletService;
+
+	@Autowired private UserUaaService userUaaService;
 
 	@Autowired
     CommissionService commissionService;
@@ -205,4 +204,48 @@ public class SettlementResource {
 	public void serviceProviderUpdateAcount(@PathVariable("userId") Long userId) throws Exception {
 		commissionService.joinMoney(userId);
 	}
+
+
+
+
+
+    @ApiOperation("线下付资料的提交")
+    @PostMapping("/user-annexes-offlineParams")
+    @Timed
+    public void offlineParams(@RequestBody FormparamsDTO formparamsDTO){
+
+        UserAnnexDTO userAnnexC =null;
+        if (!StringUtils.isBlank(formparamsDTO.getPhone())){
+             userAnnexC = userService.getUserInfosByPhone(formparamsDTO.getPhone()).getBody();
+        }
+        //TODO 1.获取商户的ID
+        //c端获得让利额10倍得积分,B端要减去的10倍积分
+        BigDecimal cUserjifen = formparamsDTO.getTransferAmount().multiply(new BigDecimal("10"));
+
+        //拿到商家的信息
+        UserAnnexDTO annexDTO = userService.getUserAnnex(formparamsDTO.getUserId()).getBody();
+        if (annexDTO.getType()==3||annexDTO.getType()==4){
+            //判断商户的越
+            WalletDTO wallet = walletService.getUserWalletInfos().getBody();
+            //int i = formparamsDTO.getTransferAmount().compareTo(wallet.getBalance());
+                System.out.println("扣钱开始--------------------------------------------------------------------------");
+                SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
+                settlementWalletDTO.setUserid(formparamsDTO.getUserId());
+                settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
+                String messags = walletService.deductmoney(settlementWalletDTO).getBody();
+                System.out.println("扣钱结束--------------------------------------------------------------------------");
+                System.out.println("给用户加积分开始====================================================================");
+                List<SettlementWalletDTO> settlementWalletDTOList = new ArrayList<SettlementWalletDTO>();
+                SettlementWalletDTO CsettlementWalletDTO = new SettlementWalletDTO();
+                CsettlementWalletDTO.setUserid(userAnnexC.getId());
+                CsettlementWalletDTO.setAmount(cUserjifen );
+                CsettlementWalletDTO.setType(2);
+                walletService.settlementWallet(settlementWalletDTOList);
+                System.out.println("给用户加积分结束====================================================================");
+
+
+
+        }
+
+    }
 }
