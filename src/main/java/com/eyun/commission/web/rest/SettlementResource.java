@@ -235,12 +235,11 @@ public class SettlementResource {
                 String messags = walletService.deductmoney(settlementWalletDTO).getBody();
                 System.out.println("扣钱结束--------------------------------------------------------------------------");
                 System.out.println("给用户加积分开始====================================================================");
-                List<SettlementWalletDTO> settlementWalletDTOList = new ArrayList<SettlementWalletDTO>();
+
                 SettlementWalletDTO CsettlementWalletDTO = new SettlementWalletDTO();
                 CsettlementWalletDTO.setUserid(userAnnexC.getId());
-                CsettlementWalletDTO.setAmount(cUserjifen );
-                CsettlementWalletDTO.setType(2);
-                walletService.settlementWallet(settlementWalletDTOList);
+                CsettlementWalletDTO.setAmount(cUserjifen);
+                walletService.AddUserIntegral(CsettlementWalletDTO);
                 System.out.println("给用户加积分结束====================================================================");
 
 
