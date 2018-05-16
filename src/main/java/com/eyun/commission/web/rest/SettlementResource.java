@@ -212,10 +212,10 @@ public class SettlementResource {
     @ApiOperation("线下付资料的提交")
     @PostMapping("/user-annexes-offlineParams")
     @Timed
-    public void offlineParams(@RequestBody FormparamsDTO formparamsDTO){
-        UserAnnexDTO userAnnexC =null;
-        if (!StringUtils.isBlank(formparamsDTO.getPhone())){
-             userAnnexC = userService.getUserInfosByPhone(formparamsDTO.getPhone()).getBody();
+    public void offlineParams(@RequestBody FormparamsDTO formparamsDTO) {
+        UserAnnexDTO userAnnexC = null;
+        if (!StringUtils.isBlank(formparamsDTO.getPhone())) {
+            userAnnexC = userService.getUserInfosByPhone(formparamsDTO.getPhone()).getBody();
         }
         //c端获得让利额10倍得积分,B端要减去的10倍积分
         BigDecimal cUserjifen = formparamsDTO.getTransferAmount().multiply(new BigDecimal("10"));
@@ -223,120 +223,72 @@ public class SettlementResource {
         UserAnnexDTO annexDTO = userService.getUserAnnex(formparamsDTO.getUserId()).getBody();
         //查看商户的钱包信息
         WalletDTO wallet = walletService.getwalletInfos(formparamsDTO.getUserId()).getBody();
-        if (annexDTO.getType()==3){
-                SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
-                settlementWalletDTO.setUserid(formparamsDTO.getUserId());
-                settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
-                String messags = walletService.deductmoney(settlementWalletDTO).getBody();
-                SettlementWalletDTO CsettlementWalletDTO = new SettlementWalletDTO();
-                CsettlementWalletDTO.setUserid(userAnnexC.getId());
-                CsettlementWalletDTO.setAmount(cUserjifen);
-                walletService.AddUserIntegral(CsettlementWalletDTO);
 
-                //消费者支线
-            if (userAnnexC.getInviterId()!=null){
-                //直接邀请人
-                UserAnnexDTO oneInviterC = userService.getUserAnnex(userAnnexC.getInviterId()).getBody();
-                        //TODO 让利额10%积分
-                if (oneInviterC.getInviterId()!=null){
-                    //间接邀请人
-                    UserAnnexDTO twoInviterC = userService.getUserAnnex(oneInviterC.getInviterId()).getBody();
-                    //TODO 让利额10%积分
-                }
-            }
-
-            //商家支线
-            if (annexDTO.getInviterId()!=null){
-                //直接邀请人
-                UserAnnexDTO OneuserAnnexB = userService.getUserAnnex(annexDTO.getInviterId()).getBody();
-                //TODO 让利额10%积分
-                if (OneuserAnnexB.getInviterId()!=null){
-                    //间接邀请人
-                    UserAnnexDTO twouserAnnexB = userService.getUserAnnex(OneuserAnnexB.getInviterId()).getBody();
-                    //TODO 让利额10%积分
-
-                }
-            }
-
-            //给商户和用户加积分
-        }else if (annexDTO.getType()==4){
+        if (annexDTO.getType() == 3 || annexDTO.getType() == 4 || annexDTO.getType() == 5) {
             SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
             settlementWalletDTO.setUserid(formparamsDTO.getUserId());
             settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
             String messags = walletService.deductmoney(settlementWalletDTO).getBody();
+            List<SetIntegralDTO> list = new ArrayList<>();
             //给用户开始加积分
-            SettlementWalletDTO CsettlementWalletDTO = new SettlementWalletDTO();
-            CsettlementWalletDTO.setUserid(userAnnexC.getId());
-            CsettlementWalletDTO.setAmount(cUserjifen);
-            walletService.AddUserIntegral(CsettlementWalletDTO);
-            //给当前商户加积分
-            SettlementWalletDTO bsettlementWallet = new SettlementWalletDTO();
-            bsettlementWallet.setUserid(formparamsDTO.getUserId());
-            BigDecimal bUserjifen = formparamsDTO.getTransferAmount().multiply(new BigDecimal("2"));
-            bsettlementWallet.setAmount(bUserjifen);
-            walletService.AddUserIntegral(bsettlementWallet);
-            //一级邀请人
-
-        }else if (annexDTO.getType()==5){
-            SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
-            settlementWalletDTO.setUserid(formparamsDTO.getUserId());
-            settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
-            String messags = walletService.deductmoney(settlementWalletDTO).getBody();
-
-            //给用户开始加积分
-            SettlementWalletDTO CsettlementWalletDTO = new SettlementWalletDTO();
+            SetIntegralDTO CsettlementWalletDTO = new SetIntegralDTO();
             CsettlementWalletDTO.setUserid(userAnnexC.getId());
             CsettlementWalletDTO.setAmount(cUserjifen);
             CsettlementWalletDTO.setType(1);
-            walletService.AddUserIntegral(CsettlementWalletDTO);
+            list.add(CsettlementWalletDTO);
 
-            //给当前商户加积分
-            SettlementWalletDTO bsettlementWallet = new SettlementWalletDTO();
-            bsettlementWallet.setUserid(formparamsDTO.getUserId());
-            bsettlementWallet.setType(4);
-            //2呗积分
-            BigDecimal bUserjifen = formparamsDTO.getTransferAmount().multiply(new BigDecimal("2"));
-            bsettlementWallet.setAmount(bUserjifen);
-            walletService.AddUserIntegral(bsettlementWallet);
+            if (annexDTO.getType() != 3) {
+                //给当前商户加积分
+                SetIntegralDTO bsettlementWallet = new SetIntegralDTO();
+                bsettlementWallet.setUserid(formparamsDTO.getUserId());
+                bsettlementWallet.setType(4);
+                //2呗积分
+                BigDecimal bUserjifen = formparamsDTO.getTransferAmount().multiply(new BigDecimal("2"));
+                bsettlementWallet.setAmount(bUserjifen);
+                list.add(bsettlementWallet);
+            }
 
             //消费者支线
-            if (userAnnexC.getInviterId()!=null){
+            if (userAnnexC.getInviterId() != null) {
                 //直接邀请人
-                SettlementWalletDTO userInviterC = new SettlementWalletDTO();
+                SetIntegralDTO userInviterC = new SetIntegralDTO();
                 UserAnnexDTO oneInviterC = userService.getUserAnnex(userAnnexC.getInviterId()).getBody();
                 userInviterC.setUserid(oneInviterC.getId());
                 userInviterC.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.01)));
                 userInviterC.setType(2);
-                if (oneInviterC.getInviterId()!=null){
+                list.add(userInviterC);
+                if (oneInviterC.getInviterId() != null) {
                     //间接邀请人
                     UserAnnexDTO twoInviterC = userService.getUserAnnex(oneInviterC.getInviterId()).getBody();
-                    SettlementWalletDTO twouserInviterC = new SettlementWalletDTO();
+                    SetIntegralDTO twouserInviterC = new SetIntegralDTO();
                     twouserInviterC.setUserid(twoInviterC.getId());
                     twouserInviterC.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.01)));
                     twouserInviterC.setType(2);
+                    list.add(twouserInviterC);
                 }
             }
             //商家支线
-            if (annexDTO.getInviterId()!=null){
+            if (annexDTO.getInviterId() != null) {
                 //直接邀请人
                 UserAnnexDTO OneuserAnnexB = userService.getUserAnnex(annexDTO.getInviterId()).getBody();
-                SettlementWalletDTO ServiceInviterB = new SettlementWalletDTO();
-                //TODO 让利额20%积分
+                SetIntegralDTO ServiceInviterB = new SetIntegralDTO();
                 ServiceInviterB.setUserid(OneuserAnnexB.getId());
                 ServiceInviterB.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.02)));
                 ServiceInviterB.setType(3);
-                if (OneuserAnnexB.getInviterId()!=null){
+                list.add(ServiceInviterB);
+                if (OneuserAnnexB.getInviterId() != null) {
                     //间接邀请人
                     UserAnnexDTO twouserAnnexB = userService.getUserAnnex(OneuserAnnexB.getInviterId()).getBody();
-                    SettlementWalletDTO ServiceTwoInviterB = new SettlementWalletDTO();
+                    SetIntegralDTO ServiceTwoInviterB = new SetIntegralDTO();
                     ServiceTwoInviterB.setUserid(twouserAnnexB.getId());
                     ServiceTwoInviterB.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.02)));
                     ServiceTwoInviterB.setType(3);
+                    list.add(ServiceTwoInviterB);
                 }
             }
+            walletService.batchintegrals(list);
 
         }
-
     }
 
 }
