@@ -4,6 +4,7 @@ package com.eyun.commission.service;
 import java.util.List;
 
 
+import com.eyun.commission.service.dto.SetIntegralDTO;
 import com.eyun.commission.service.dto.WalletDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,48 @@ public interface WalletService {
      */
     @PostMapping("/api/wallet/deductmoney")
     ResponseEntity<String> deductmoney(@RequestBody SettlementWalletDTO settlementWalletDTO);
+
+
+
+
+
+    /**
+     * 线下给给对应的用户添加积分
+     * @param
+     * @return
+     */
+    @PostMapping("/api/wallet/AddUserIntegral")
+    ResponseEntity<String> AddUserIntegral(@RequestBody SettlementWalletDTO settlementWalletDTO);
+
+
+
+
+
+
+    /**
+     *
+     * @param
+     * @return
+     */
+    @PostMapping("/api/getwalletInfos/{userId}")
+    ResponseEntity<WalletDTO> getwalletInfos(@PathVariable(value ="userId")Long userId);
+
+
+
+
+
+    @PutMapping("/api/wallet/batchintegrals")
+    ResponseEntity batchintegrals(@RequestBody List<SetIntegralDTO> setIntegralDTOList);
+
+
+
+
+
+
+
+
+
+
 
 
 
