@@ -70,6 +70,7 @@ public class CommissionServiceImpl implements CommissionService{
                 settlementWalletDTO.setAmount(decimal);
                 walletService.commissionCash(settlementWalletDTO);
             } else {//该商户在服务商间接体系内
+                Integer count=0;
                 while (true) {
                     inviterId = userAnnexDTO.getInviterId();
                     if (inviterId == null) {
@@ -79,6 +80,7 @@ public class CommissionServiceImpl implements CommissionService{
                     if (userAnnexDTO.getType() != 5) {
                         break;
                     }
+                    count++;
                     SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
                     settlementWalletDTO.setOrderNo(orderNo);
                     settlementWalletDTO.setUserid(userAnnexDTO.getId());
@@ -87,11 +89,14 @@ public class CommissionServiceImpl implements CommissionService{
                     BigDecimal decimal = new BigDecimal(df.format((double) amond * 0.004));
                     settlementWalletDTO.setAmount(decimal);
                     walletService.commissionCash(settlementWalletDTO);
-                    break;
+                    if (count==2){
+                        break;
+                    }
                 }
             }
+            return "success";
         }
-        return "success";
+        return "faild";
     }
 
     @Override
