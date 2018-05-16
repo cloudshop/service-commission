@@ -231,62 +231,63 @@ public class SettlementResource {
             String messags = walletService.deductmoney(settlementWalletDTO).getBody();
             List<SetIntegralDTO> list = new ArrayList<>();
             //给用户开始加积分
-            SetIntegralDTO CsettlementWalletDTO = new SetIntegralDTO();
+            SettlementWalletDTO  CsettlementWalletDTO = new SettlementWalletDTO ();
             CsettlementWalletDTO.setUserid(userAnnexC.getId());
             CsettlementWalletDTO.setAmount(cUserjifen);
             CsettlementWalletDTO.setType(1);
-            list.add(CsettlementWalletDTO);
+            walletService.AddUserIntegral(CsettlementWalletDTO);
 
             if (annexDTO.getType() != 3) {
                 //给当前商户加积分
-                SetIntegralDTO bsettlementWallet = new SetIntegralDTO();
+                SettlementWalletDTO   bsettlementWallet = new SettlementWalletDTO ();
                 bsettlementWallet.setUserid(formparamsDTO.getUserId());
                 bsettlementWallet.setType(4);
                 //2呗积分
                 BigDecimal bUserjifen = formparamsDTO.getTransferAmount().multiply(new BigDecimal("2"));
                 bsettlementWallet.setAmount(bUserjifen);
-                list.add(bsettlementWallet);
+                walletService.AddUserIntegral(bsettlementWallet);
             }
 
             //消费者支线
             if (userAnnexC.getInviterId() != null) {
                 //直接邀请人
-                SetIntegralDTO userInviterC = new SetIntegralDTO();
+                SettlementWalletDTO   userInviterC = new SettlementWalletDTO ();
                 UserAnnexDTO oneInviterC = userService.getUserAnnex(userAnnexC.getInviterId()).getBody();
                 userInviterC.setUserid(oneInviterC.getId());
                 userInviterC.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.01)));
                 userInviterC.setType(2);
-                list.add(userInviterC);
+                walletService.AddUserIntegral(userInviterC);
                 if (oneInviterC.getInviterId() != null) {
                     //间接邀请人
                     UserAnnexDTO twoInviterC = userService.getUserAnnex(oneInviterC.getInviterId()).getBody();
-                    SetIntegralDTO twouserInviterC = new SetIntegralDTO();
+                    SettlementWalletDTO   twouserInviterC = new SettlementWalletDTO ();
                     twouserInviterC.setUserid(twoInviterC.getId());
                     twouserInviterC.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.01)));
                     twouserInviterC.setType(2);
-                    list.add(twouserInviterC);
+                    walletService.AddUserIntegral(twouserInviterC);
                 }
             }
             //商家支线
             if (annexDTO.getInviterId() != null) {
                 //直接邀请人
                 UserAnnexDTO OneuserAnnexB = userService.getUserAnnex(annexDTO.getInviterId()).getBody();
-                SetIntegralDTO ServiceInviterB = new SetIntegralDTO();
+                SettlementWalletDTO   ServiceInviterB = new SettlementWalletDTO ();
                 ServiceInviterB.setUserid(OneuserAnnexB.getId());
                 ServiceInviterB.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.02)));
                 ServiceInviterB.setType(3);
-                list.add(ServiceInviterB);
+                walletService.AddUserIntegral( ServiceInviterB);
+
                 if (OneuserAnnexB.getInviterId() != null) {
                     //间接邀请人
                     UserAnnexDTO twouserAnnexB = userService.getUserAnnex(OneuserAnnexB.getInviterId()).getBody();
-                    SetIntegralDTO ServiceTwoInviterB = new SetIntegralDTO();
+                    SettlementWalletDTO   ServiceTwoInviterB = new SettlementWalletDTO ();
                     ServiceTwoInviterB.setUserid(twouserAnnexB.getId());
                     ServiceTwoInviterB.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.02)));
                     ServiceTwoInviterB.setType(3);
-                    list.add(ServiceTwoInviterB);
+                    walletService.AddUserIntegral( ServiceTwoInviterB);
                 }
             }
-            walletService.batchintegrals(list);
+
 
         }
     }
