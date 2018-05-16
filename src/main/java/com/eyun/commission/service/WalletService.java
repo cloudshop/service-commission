@@ -39,4 +39,20 @@ public interface WalletService {
 
 
 
+
+    /**
+     * 线下给给对应的用户添加积分
+     * @param
+     * @return
+     */
+    @PostMapping("/api/wallet/AddUserIntegral")
+    ResponseEntity<String> AddUserIntegral(@RequestBody SettlementWalletDTO settlementWalletDTO);
+
+
+
+
+
+
+
+
 }
