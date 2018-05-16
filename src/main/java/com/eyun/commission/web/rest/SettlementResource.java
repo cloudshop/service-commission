@@ -174,13 +174,24 @@ public class SettlementResource {
 
     /**
      * 迎新
-     * 服务商现金分配
+     * 服务商：交易额现金分配（交易金额2%手续费额度20%）
      * @param shopId,payment
      */
     @GetMapping("/order/facilitator/wallet")
     public ResponseEntity handleFacilitatorWallet(@NotNull @RequestParam("shopId") Long shopId, @NotNull @RequestParam("payment")BigDecimal payment,@RequestParam("orderNo")String orderNo)throws Exception{
         String result=commissionService.handleFacilitatorWallet(shopId,payment,orderNo);
        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
+    }
+
+    /**
+     * 迎新
+     * 服务商：入驻费现金分配（入驻费的20%）
+     * @param shopId,payment
+     */
+    @GetMapping("/order/facilitator/charge")
+    public ResponseEntity handleServiceCharge(@NotNull @RequestParam("userId") Long userId, @NotNull @RequestParam("payment")BigDecimal payment,@RequestParam("orderNo")String orderNo)throws Exception{
+        String result=commissionService.handleServiceCharge(userId,payment,orderNo);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
     }
 
 	/**

@@ -93,4 +93,44 @@ public class CommissionServiceImpl implements CommissionService{
         }
         return "success";
     }
+
+    @Override
+    public String handleServiceCharge(Long userId, BigDecimal payment, String orderNo) throws Exception {
+        UserAnnexDTO userAnnexDTO = userService.getUserAnnex(userId).getBody();
+        Long inviterId = userAnnexDTO.getInviterId();
+        if (inviterId != null) {
+            userAnnexDTO = userService.getUserAnnex(inviterId).getBody();
+            if (userAnnexDTO.getType() == 5) {//该商户在服务商直接体系内
+                SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
+                settlementWalletDTO.setOrderNo(orderNo);
+                settlementWalletDTO.setUserid(userAnnexDTO.getId());
+                DecimalFormat df = new DecimalFormat("0.00");
+                Double amond = payment.doubleValue();
+                BigDecimal decimal = new BigDecimal(df.format((double) amond * 0.2));
+                settlementWalletDTO.setAmount(decimal);
+                walletService.commissionCash(settlementWalletDTO);
+            } else {//该商户在服务商间接体系内
+                while (true) {
+                    inviterId = userAnnexDTO.getInviterId();
+                    if (inviterId == null) {
+                        break;
+                    }
+                    userAnnexDTO = userService.getUserAnnex(inviterId).getBody();
+                    if (userAnnexDTO.getType() != 5) {
+                        break;
+                    }
+                    SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
+                    settlementWalletDTO.setOrderNo(orderNo);
+                    settlementWalletDTO.setUserid(userAnnexDTO.getId());
+                    DecimalFormat df = new DecimalFormat("0.00");
+                    Double amond = payment.doubleValue();
+                    BigDecimal decimal = new BigDecimal(df.format((double) amond * 0.2));
+                    settlementWalletDTO.setAmount(decimal);
+                    walletService.commissionCash(settlementWalletDTO);
+                    break;
+                }
+            }
+        }
+        return "success";
+    }
 }
