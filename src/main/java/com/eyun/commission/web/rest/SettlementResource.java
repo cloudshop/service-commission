@@ -287,7 +287,7 @@ public class SettlementResource {
                 }
             }
 
-            walletService.batchintegrals(list);
+            walletService.settlementWallet(list);
 
         }
            //服务商
@@ -354,7 +354,7 @@ public class SettlementResource {
                     list.add(ServiceTwoInviterB);
                 }
             }
-            walletService.batchintegrals(list);
+            walletService.settlementWallet(list);
         }
 
     }
