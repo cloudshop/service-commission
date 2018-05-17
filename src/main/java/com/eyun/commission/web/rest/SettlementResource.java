@@ -323,7 +323,6 @@ public class SettlementResource {
                     list.add(twouserInviterC);
                 }
             }
-
             //商家支线
             if (annexDTO.getInviterId() != null) {
                 //直接邀请人
@@ -344,9 +343,9 @@ public class SettlementResource {
                     UserAnnexDTO twouserAnnexB = userService.getUserAnnex(OneuserAnnexB.getInviterId()).getBody();
                     //加现金
                     SettlementWalletDTO   ServiceTradingFee = new SettlementWalletDTO ();
-                    ServiceTradingFeeB.setUserid(twouserAnnexB.getId());
-                    ServiceTradingFeeB.setAmount(TradingFee);
-                    ServiceTradingFeeB.setType(1);
+                    ServiceTradingFee.setUserid(twouserAnnexB.getId());
+                    ServiceTradingFee.setAmount(TradingFee);
+                    ServiceTradingFee.setType(1);
                     list.add(ServiceTradingFee);
                     SettlementWalletDTO   ServiceTwoInviterB = new SettlementWalletDTO ();
                     ServiceTwoInviterB.setUserid(twouserAnnexB.getId());
