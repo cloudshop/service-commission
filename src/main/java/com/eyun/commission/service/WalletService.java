@@ -67,7 +67,7 @@ public interface WalletService {
 
 
     @PutMapping("/api/wallet/batchintegrals")
-    ResponseEntity batchintegrals(@RequestBody List<SetIntegralDTO> setIntegralDTOList);
+    ResponseEntity batchintegrals(@RequestBody List<SettlementWalletDTO> settlementWalletDTOList);
 
 
 
