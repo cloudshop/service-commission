@@ -148,7 +148,6 @@ public class SettlementResource {
         if (404 == resp.getStatusCodeValue() || resp.getBody().getStatus() != 4) { //校验订单状态
             throw new BadRequestException("订单异常");
         }
-
         ProOrderDTO proOrderDTO = resp.getBody();
         //拿到店铺的ID，根据店铺的ID查询出店铺邀请人的服务商是谁
         Long shopId = proOrderDTO.getShopId();
@@ -232,6 +231,9 @@ public class SettlementResource {
             settlementWalletDTO.setUserid(formparamsDTO.getUserId());
             settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
             String messags = walletService.deductmoney(settlementWalletDTO).getBody();
+            System.out.println(messags+"成功");
+
+
             //给用户开始加积分
             SettlementWalletDTO  CsettlementWalletDTO = new SettlementWalletDTO ();
             CsettlementWalletDTO.setUserid(userAnnexC.getId());
