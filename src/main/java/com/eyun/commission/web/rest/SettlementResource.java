@@ -232,8 +232,6 @@ public class SettlementResource {
             settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
             String messags = walletService.deductmoney(settlementWalletDTO).getBody();
             System.out.println(messags+"成功");
-
-
             //给用户开始加积分
             SettlementWalletDTO  CsettlementWalletDTO = new SettlementWalletDTO ();
             CsettlementWalletDTO.setUserid(userAnnexC.getId());
@@ -289,7 +287,7 @@ public class SettlementResource {
                 }
             }
 
-            walletService.settlementWallet(list);
+            walletService.batchintegrals(list);
 
         }
            //服务商
@@ -356,7 +354,7 @@ public class SettlementResource {
                     list.add(ServiceTwoInviterB);
                 }
             }
-            walletService.settlementWallet(list);
+            walletService.batchintegrals(list);
         }
 
     }
