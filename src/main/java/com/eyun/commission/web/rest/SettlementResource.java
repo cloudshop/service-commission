@@ -214,9 +214,6 @@ public class SettlementResource {
     @PostMapping("/user-annexes-offlineParams")
     @Timed
     public void offlineParams(@RequestBody FormparamsDTO formparamsDTO) {
-
-
-
         UserAnnexDTO userAnnexC = null;
         if (!StringUtils.isBlank(formparamsDTO.getPhone())) {
             userAnnexC = userService.getUserInfosByPhone(formparamsDTO.getPhone()).getBody();
@@ -225,20 +222,16 @@ public class SettlementResource {
         BigDecimal cUserjifen = formparamsDTO.getTransferAmount().multiply(new BigDecimal("10"));
         //交易手续费20%给服务商邀请人
         BigDecimal TradingFee = formparamsDTO.getMent().multiply(new BigDecimal(0.02)).multiply(new BigDecimal(0.2));
-
-
         //拿到商家的信息
         UserAnnexDTO annexDTO = userService.getUserAnnex(formparamsDTO.getUserId()).getBody();
         //查看商户的钱包信息
         WalletDTO wallet = walletService.getwalletInfos(formparamsDTO.getUserId()).getBody();
         List<SettlementWalletDTO> list = new ArrayList<>();
         if (annexDTO.getType() == 3 || annexDTO.getType() == 4 ) {
-
             SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
             settlementWalletDTO.setUserid(formparamsDTO.getUserId());
             settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
             String messags = walletService.deductmoney(settlementWalletDTO).getBody();
-
             //给用户开始加积分
             SettlementWalletDTO  CsettlementWalletDTO = new SettlementWalletDTO ();
             CsettlementWalletDTO.setUserid(userAnnexC.getId());
@@ -293,6 +286,8 @@ public class SettlementResource {
                     list.add(ServiceTwoInviterB);
                 }
             }
+
+            walletService.settlementWallet(list);
 
         }
            //服务商
@@ -360,8 +355,9 @@ public class SettlementResource {
                     list.add(ServiceTwoInviterB);
                 }
             }
+            walletService.settlementWallet(list);
         }
-        walletService.settlementWallet(list);
+
     }
 
 }
