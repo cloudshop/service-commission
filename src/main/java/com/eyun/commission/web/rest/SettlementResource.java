@@ -230,8 +230,8 @@ public class SettlementResource {
             SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
             settlementWalletDTO.setUserid(formparamsDTO.getUserId());
             settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
-            String messags = walletService.deductmoney(settlementWalletDTO).getBody();
-            System.out.println(messags+"成功");
+            list.add(settlementWalletDTO);
+            //String messags = walletService.deductmoney(settlementWalletDTO).getBody();
             //给用户开始加积分
             SettlementWalletDTO  CsettlementWalletDTO = new SettlementWalletDTO ();
             CsettlementWalletDTO.setUserid(userAnnexC.getId());
@@ -261,13 +261,10 @@ public class SettlementResource {
                     //间接邀请人
                     UserAnnexDTO twoInviterC = userService.getUserAnnex(oneInviterC.getInviterId()).getBody();
                     SettlementWalletDTO twouserInviterC = new SettlementWalletDTO();
-                    if (twoInviterC.getId()!=null){
                         twouserInviterC.setUserid(twoInviterC.getId());
                         twouserInviterC.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.01)));
                         twouserInviterC.setType(4);
                         list.add(twouserInviterC);
-                    }
-
                 }
             }
             //商家支线
@@ -289,24 +286,44 @@ public class SettlementResource {
                     list.add(ServiceTwoInviterB);
                 }
             }
-
             walletService.settlementWallet(list);
 
         }
-           //服务商
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //服务商
         if (annexDTO.getType() == 5){
             SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
             settlementWalletDTO.setUserid(formparamsDTO.getUserId());
             settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
-            String messags = walletService.deductmoney(settlementWalletDTO).getBody();
-
+            list.add(settlementWalletDTO);
+            //String messags = walletService.deductmoney(settlementWalletDTO).getBody();
             //给用户开始加积分
             SettlementWalletDTO  CsettlementWalletDTO = new SettlementWalletDTO ();
             CsettlementWalletDTO.setUserid(userAnnexC.getId());
             CsettlementWalletDTO.setAmount(cUserjifen);
             CsettlementWalletDTO.setType(2);
             list.add(CsettlementWalletDTO);
-
             //消费者支线
             if (userAnnexC.getInviterId() != null) {
                 //直接邀请人
@@ -359,6 +376,7 @@ public class SettlementResource {
             }
             walletService.settlementWallet(list);
         }
+
 
     }
 
