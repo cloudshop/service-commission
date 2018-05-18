@@ -261,10 +261,13 @@ public class SettlementResource {
                     //间接邀请人
                     UserAnnexDTO twoInviterC = userService.getUserAnnex(oneInviterC.getInviterId()).getBody();
                     SettlementWalletDTO twouserInviterC = new SettlementWalletDTO();
-                    twouserInviterC.setUserid(twoInviterC.getId());
-                    twouserInviterC.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.01)));
-                    twouserInviterC.setType(4);
-                    list.add(twouserInviterC);
+                    if (twoInviterC.getId()!=null){
+                        twouserInviterC.setUserid(twoInviterC.getId());
+                        twouserInviterC.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.01)));
+                        twouserInviterC.setType(4);
+                        list.add(twouserInviterC);
+                    }
+
                 }
             }
             //商家支线
