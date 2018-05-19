@@ -226,10 +226,13 @@ public class SettlementResource {
         //查看商户的钱包信息
         WalletDTO wallet = walletService.getwalletInfos(formparamsDTO.getUserId()).getBody();
         List<SettlementWalletDTO> list = new ArrayList<>();
-        if (annexDTO.getType() == 3 || annexDTO.getType() == 4 ) {
+
+        //只容许普通商家，增值商家，服务商进来
+        if (annexDTO.getType() == 3 || annexDTO.getType() == 4 || annexDTO.getType()==5) {
             SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
             settlementWalletDTO.setUserid(formparamsDTO.getUserId());
             settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
+            settlementWalletDTO.setType(5);
             list.add(settlementWalletDTO);
             System.out.println("******************扣除商户的钱**********************" + settlementWalletDTO.getAmount());
 
@@ -255,26 +258,22 @@ public class SettlementResource {
             if (userAnnexC.getInviterId() != null) {
                 //直接邀请人
                 UserAnnexDTO oneInviterC = userService.getUserAnnex(userAnnexC.getInviterId()).getBody();
-                if (oneInviterC.getId()!=null){
                     SettlementWalletDTO userInviterC = new SettlementWalletDTO();
                     userInviterC.setUserid(oneInviterC.getId());
                     userInviterC.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.01)));
                     userInviterC.setType(4);
                     list.add(userInviterC);
                     System.out.println("********************给直接邀请人加积分*******************"+userInviterC.getAmount());
-                }
+
                 if (oneInviterC.getInviterId() != null) {
                     //间接邀请人
                     UserAnnexDTO twoInviterC = userService.getUserAnnex(oneInviterC.getInviterId()).getBody();
-                    if (twoInviterC.getId()!=null){
                         SettlementWalletDTO twouserInviterC = new SettlementWalletDTO();
                         twouserInviterC.setUserid(twoInviterC.getId());
                         twouserInviterC.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.01)));
                         twouserInviterC.setType(4);
                         list.add(twouserInviterC);
                         System.out.println("****************给间接邀请人加积分***************" + twouserInviterC.getAmount());
-                    }
-
                 }
             }
             //商家支线
@@ -282,97 +281,52 @@ public class SettlementResource {
             if (annexDTO.getInviterId() != null) {
                 //直接邀请人
                 UserAnnexDTO OneuserAnnexB = userService.getUserAnnex(annexDTO.getInviterId()).getBody();
-                if (OneuserAnnexB.getId()!=null){
                     SettlementWalletDTO   ServiceInviterB = new SettlementWalletDTO ();
                     ServiceInviterB.setUserid(OneuserAnnexB.getId());
                     ServiceInviterB.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.01)));
                     ServiceInviterB.setType(4);
                     list.add(ServiceInviterB);
                     System.out.println("*******************给直接邀请人加积分*****************"+ServiceInviterB.getAmount());
-                }
+                    //服务商
+                    if (annexDTO.getType()==5){
+                        //加现金奖励
+                        SettlementWalletDTO   ServiceTradingFeeB = new SettlementWalletDTO ();
+                        ServiceTradingFeeB.setUserid(OneuserAnnexB.getId());
+                        ServiceTradingFeeB.setAmount(TradingFee);
+                        ServiceTradingFeeB.setType(1);
+                        list.add(ServiceTradingFeeB);
+                    }
+
                 if (OneuserAnnexB.getInviterId() != null) {
                     //间接邀请人
                     UserAnnexDTO twouserAnnexB = userService.getUserAnnex(OneuserAnnexB.getInviterId()).getBody();
-                    if (twouserAnnexB.getId()!=null){
                         SettlementWalletDTO   ServiceTwoInviterB = new SettlementWalletDTO ();
                         ServiceTwoInviterB.setUserid(twouserAnnexB.getId());
                         ServiceTwoInviterB.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.01)));
                         ServiceTwoInviterB.setType(4);
                         list.add(ServiceTwoInviterB);
                         System.out.println("*************给直接邀请人加积分**************" + ServiceTwoInviterB.getAmount());
+                    if (annexDTO.getType()==5){
+                        //现金奖励
+                        SettlementWalletDTO   ServiceTradingFee = new SettlementWalletDTO ();
+                        ServiceTradingFee.setUserid(twouserAnnexB.getId());
+                        ServiceTradingFee.setAmount(TradingFee);
+                        ServiceTradingFee.setType(1);
+                        list.add(ServiceTradingFee);
+
+
                     }
 
+
                 }
             }
+
             walletService.settlementWallet(list);
 
         }
 
-        //服务商
-        if (annexDTO.getType() == 5){
-            SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
-            settlementWalletDTO.setUserid(formparamsDTO.getUserId());
-            settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
-            list.add(settlementWalletDTO);
-            //String messags = walletService.deductmoney(settlementWalletDTO).getBody();
-            //给用户开始加积分
-            SettlementWalletDTO  CsettlementWalletDTO = new SettlementWalletDTO ();
-            CsettlementWalletDTO.setUserid(userAnnexC.getId());
-            CsettlementWalletDTO.setAmount(cUserjifen);
-            CsettlementWalletDTO.setType(2);
-            list.add(CsettlementWalletDTO);
-            //消费者支线
-            if (userAnnexC.getInviterId() != null) {
-                //直接邀请人
-                SettlementWalletDTO userInviterC = new SettlementWalletDTO();
-                UserAnnexDTO oneInviterC = userService.getUserAnnex(userAnnexC.getInviterId()).getBody();
-                userInviterC.setUserid(oneInviterC.getId());
-                userInviterC.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.01)));
-                userInviterC.setType(4);
-                list.add(userInviterC);
-                if (oneInviterC.getInviterId() != null) {
-                    //间接邀请人
-                    UserAnnexDTO twoInviterC = userService.getUserAnnex(oneInviterC.getInviterId()).getBody();
-                    SettlementWalletDTO twouserInviterC = new SettlementWalletDTO();
-                    twouserInviterC.setUserid(twoInviterC.getId());
-                    twouserInviterC.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.01)));
-                    twouserInviterC.setType(4);
-                    list.add(twouserInviterC);
-                }
-            }
-            //商家支线
-            if (annexDTO.getInviterId() != null) {
-                //直接邀请人
-                UserAnnexDTO OneuserAnnexB = userService.getUserAnnex(annexDTO.getInviterId()).getBody();
-                //加现金
-                SettlementWalletDTO   ServiceTradingFeeB = new SettlementWalletDTO ();
-                ServiceTradingFeeB.setUserid(OneuserAnnexB.getId());
-                ServiceTradingFeeB.setAmount(TradingFee);
-                ServiceTradingFeeB.setType(1);
-                list.add(ServiceTradingFeeB);
-                SettlementWalletDTO   ServiceInviterB = new SettlementWalletDTO ();
-                ServiceInviterB.setUserid(OneuserAnnexB.getId());
-                ServiceInviterB.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.02)));
-                ServiceInviterB.setType(4);
-                list.add(ServiceInviterB);
-                if (OneuserAnnexB.getInviterId() != null) {
-                    //间接邀请人
-                    UserAnnexDTO twouserAnnexB = userService.getUserAnnex(OneuserAnnexB.getInviterId()).getBody();
-                    //加现金
-                    SettlementWalletDTO   ServiceTradingFee = new SettlementWalletDTO ();
-                    ServiceTradingFee.setUserid(twouserAnnexB.getId());
-                    ServiceTradingFee.setAmount(TradingFee);
-                    ServiceTradingFee.setType(1);
-                    list.add(ServiceTradingFee);
-                    SettlementWalletDTO   ServiceTwoInviterB = new SettlementWalletDTO ();
-                    ServiceTwoInviterB.setUserid(twouserAnnexB.getId());
-                    ServiceTwoInviterB.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.02)));
-                    ServiceTwoInviterB.setType(4);
-                    list.add(ServiceTwoInviterB);
-                }
-            }
-            walletService.settlementWallet(list);
-        }
+
+
 
 
     }
