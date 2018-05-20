@@ -158,6 +158,7 @@ public class SettlementResource {
         Long inviterId = userAnnexDTO.getInviterId();
         UserAnnexDTO inviterUser = null;
         while (true) {
+
             if (userAnnexDTO.getInviterId() != null && userAnnexDTO.getType() == 5) {
                  inviterUser = userService.getUserAnnex(inviterId).getBody();
                 break;
