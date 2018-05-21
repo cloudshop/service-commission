@@ -105,11 +105,13 @@ public class CommissionServiceImpl implements CommissionService {
 
     @Override
     public String handleServiceCharge(Long userId, BigDecimal payment, String orderNo) throws Exception {
+        Integer count = 0;
         UserAnnexDTO userAnnexDTO = userService.getUserAnnex(userId).getBody();
         Long inviterId = userAnnexDTO.getInviterId();
         if (inviterId != null) {
             userAnnexDTO = userService.getUserAnnex(inviterId).getBody();
             if (userAnnexDTO.getType() == 5) {//该商户在服务商直接体系内
+                count++;
                 SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
                 settlementWalletDTO.setOrderNo(orderNo);
                 settlementWalletDTO.setUserid(userAnnexDTO.getId());
@@ -126,8 +128,9 @@ public class CommissionServiceImpl implements CommissionService {
                     }
                     userAnnexDTO = userService.getUserAnnex(inviterId).getBody();
                     if (userAnnexDTO.getType() != 5) {
-                        break;
+                        continue;
                     }
+                    count++;
                     SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
                     settlementWalletDTO.setOrderNo(orderNo);
                     settlementWalletDTO.setUserid(userAnnexDTO.getId());
@@ -136,10 +139,13 @@ public class CommissionServiceImpl implements CommissionService {
                     BigDecimal decimal = new BigDecimal(df.format((double) amond * 0.2));
                     settlementWalletDTO.setAmount(decimal);
                     walletService.commissionCash(settlementWalletDTO);
-                    break;
+                    if (count == 2) {
+                        break;
+                    }
                 }
             }
+            return "success";
         }
-        return "success";
+        return "faild";
     }
 }
