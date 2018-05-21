@@ -3,6 +3,7 @@ package com.eyun.commission.web.rest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.codahale.metrics.annotation.Timed;
@@ -230,6 +231,9 @@ public class SettlementResource {
         List<SettlementWalletDTO> list = new ArrayList<>();
         //只容许普通商家，增值商家，服务商进来
         if (annexDTO.getType() == 3 || annexDTO.getType() == 4 || annexDTO.getType()==5) {
+            if (Objects.equals(userAnnexC.getId(), annexDTO.getId())){
+                return ResponseEntity.ok().body("fai");
+            }
             SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
             settlementWalletDTO.setUserid(formparamsDTO.getUserId());
             settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
