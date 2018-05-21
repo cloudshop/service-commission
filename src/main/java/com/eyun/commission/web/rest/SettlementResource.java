@@ -233,9 +233,9 @@ public class SettlementResource {
             SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
             settlementWalletDTO.setUserid(formparamsDTO.getUserId());
             settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
-            settlementWalletDTO.setType(5);
-            walletService.deductmoney(settlementWalletDTO);
-            //list.add(settlementWalletDTO);
+            settlementWalletDTO.setType(9);
+            //walletService.deductmoney(settlementWalletDTO);
+            list.add(settlementWalletDTO);
             System.out.println("******************扣除商户的钱**********************" + settlementWalletDTO.getAmount());
             //给用户开始加积分
             SettlementWalletDTO  CsettlementWalletDTO = new SettlementWalletDTO ();
