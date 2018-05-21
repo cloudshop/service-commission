@@ -232,7 +232,7 @@ public class SettlementResource {
         //只容许普通商家，增值商家，服务商进来
         if (annexDTO.getType() == 3 || annexDTO.getType() == 4 || annexDTO.getType()==5) {
             if (Objects.equals(userAnnexC.getId(), annexDTO.getId())){
-                return ResponseEntity.ok().body("fai");
+                return ResponseEntity.ok().body("jb");
             }
             SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
             settlementWalletDTO.setUserid(formparamsDTO.getUserId());
