@@ -318,7 +318,7 @@ public class SettlementResource {
                     }
                 }
             }
-            walletService.settlementWallet(list);
+            walletService.batchintegrals(list);
             return ResponseEntity.ok().body("ok");
 
         }
