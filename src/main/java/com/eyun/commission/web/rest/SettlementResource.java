@@ -234,8 +234,6 @@ public class SettlementResource {
             if (Objects.equals(userAnnexC.getId(), annexDTO.getId())){
                 return ResponseEntity.ok().body("jb");
             }
-            int a = wallet.getBalance().compareTo(formparamsDTO.getTransferAmount());
-            System.out.println(a+"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
             SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
             settlementWalletDTO.setUserid(formparamsDTO.getUserId());
             settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
