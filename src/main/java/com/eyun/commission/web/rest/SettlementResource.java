@@ -238,7 +238,6 @@ public class SettlementResource {
             settlementWalletDTO.setUserid(formparamsDTO.getUserId());
             settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
             settlementWalletDTO.setType(9);
-            //walletService.deductmoney(settlementWalletDTO);
             list.add(settlementWalletDTO);
             System.out.println("******************扣除商户的钱**********************" + settlementWalletDTO.getAmount());
             //给用户开始加积分
@@ -255,6 +254,7 @@ public class SettlementResource {
                 bsettlementWallet.setUserid(formparamsDTO.getUserId());
                 bsettlementWallet.setType(4);
                 //2呗积分
+                System.out.println("增值商家2倍积分开始添加**********************************************");
                 BigDecimal bUserjifen = formparamsDTO.getTransferAmount().multiply(new BigDecimal("2"));
                 bsettlementWallet.setAmount(bUserjifen);
                 list.add(bsettlementWallet);
