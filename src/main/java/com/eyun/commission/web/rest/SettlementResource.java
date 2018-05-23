@@ -234,6 +234,8 @@ public class SettlementResource {
             if (Objects.equals(userAnnexC.getId(), annexDTO.getId())){
                 return ResponseEntity.ok().body("jb");
             }
+            int a = wallet.getBalance().compareTo(formparamsDTO.getTransferAmount());
+            System.out.println(a+"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
             SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
             settlementWalletDTO.setUserid(formparamsDTO.getUserId());
             settlementWalletDTO.setAmount(formparamsDTO.getTransferAmount());
@@ -259,7 +261,7 @@ public class SettlementResource {
                 bsettlementWallet.setAmount(bUserjifen);
                 list.add(bsettlementWallet);
             }
-            System.out.println("消费者支线-------------------------------------------------------------------------_->");
+            System.out.println("消费者支线-------------------------------------------------------------------------->");
             //消费者支线
             if (userAnnexC.getInviterId() !=null && userAnnexC.getInviterId() !=0) {
                 //直接邀请人
