@@ -297,12 +297,14 @@ public class SettlementResource {
 
                 }else {
                     //加现金奖励
-                    SettlementWalletDTO   ServiceTradingFeeB = new SettlementWalletDTO ();
-                    ServiceTradingFeeB.setUserid(OneuserAnnexB.getId());
-                    ServiceTradingFeeB.setAmount(TradingFee);
-                    ServiceTradingFeeB.setType(7);
-                    list.add(ServiceTradingFeeB);
-                    System.out.println("服务商加奖金");
+                    if (OneuserAnnexB.getType()==5){
+                        SettlementWalletDTO   ServiceTradingFeeB = new SettlementWalletDTO ();
+                        ServiceTradingFeeB.setUserid(OneuserAnnexB.getId());
+                        ServiceTradingFeeB.setAmount(TradingFee);
+                        ServiceTradingFeeB.setType(7);
+                        list.add(ServiceTradingFeeB);
+                        System.out.println("服务商加奖金");
+                    }
 
                     //加积分
                     SettlementWalletDTO   ServiceB = new SettlementWalletDTO ();
@@ -324,15 +326,15 @@ public class SettlementResource {
                         System.out.println("************给直接邀请人加积分***********" + ServiceTwoInviterB.getAmount());
                     }else {
                         //加钱
-                        SettlementWalletDTO   ServiceTradingFee = new SettlementWalletDTO ();
-                        ServiceTradingFee.setUserid(twouserAnnexB.getId());
-                        ServiceTradingFee.setAmount(TradingFee);
-                        ServiceTradingFee.setType(8);
-                        list.add(ServiceTradingFee);
-                        System.out.println("服务商加奖金");
-
+                        if (twouserAnnexB.getType()==5){
+                            SettlementWalletDTO   ServiceTradingFee = new SettlementWalletDTO ();
+                            ServiceTradingFee.setUserid(twouserAnnexB.getId());
+                            ServiceTradingFee.setAmount(TradingFee);
+                            ServiceTradingFee.setType(8);
+                            list.add(ServiceTradingFee);
+                            System.out.println("服务商加奖金");
+                        }
                         //加积分
-
                         SettlementWalletDTO   ServiceTwoInviterE = new SettlementWalletDTO ();
                         ServiceTwoInviterE.setUserid(twouserAnnexB.getId());
                         ServiceTwoInviterE.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.2)));
