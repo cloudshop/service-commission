@@ -138,39 +138,7 @@ public class SettlementResource {
 
 	}
 
-    /**
-     * 文亮
-     * 线上分佣系统
-     * @param orderNo
-     */
-    @PostMapping("/order/integralDistribution/{orderNo}")
-	public void integralDistribution(@PathVariable("orderNo") String orderNo) throws Exception{
-        ResponseEntity<ProOrderDTO> resp = orderService.findOrderByOrderNo(orderNo);
-        if (404 == resp.getStatusCodeValue() || resp.getBody().getStatus() != 4) { //校验订单状态
-            throw new BadRequestException("订单异常");
-        }
-        ProOrderDTO proOrderDTO = resp.getBody();
-        //拿到店铺的ID，根据店铺的ID查询出店铺邀请人的服务商是谁
-        Long shopId = proOrderDTO.getShopId();
-        //根据店铺ID拿到，店铺持有人的用户的ID
-        Long userId = userService.getShopIdFindByUserid(shopId).getBody();
-        UserAnnexDTO userAnnexDTO = userService.getUserAnnex(userId).getBody();
-        //拿到邀请人的并且的邀请人的ID不能为空和必须的得等于5
-        Long inviterId = userAnnexDTO.getInviterId();
-        UserAnnexDTO inviterUser = null;
-        while (true) {
-
-            if (userAnnexDTO.getInviterId() != null && userAnnexDTO.getType() == 5) {
-                inviterUser = userService.getUserAnnex(inviterId).getBody();
-                break;
-            } else if (inviterUser.getInviterId()==null){
-                break;
-
-            }else if (inviterUser.getInviterId()!=null){
-                inviterId = inviterUser.getInviterId();
-            }
-        }
-    }
+ 
 
     /**
      * 迎新
