@@ -140,7 +140,7 @@ public class SettlementResource {
 
     /**
      * 文亮
-     * 服务商积分分配
+     * 线上分佣系统
      * @param orderNo
      */
     @PostMapping("/order/integralDistribution/{orderNo}")
@@ -161,7 +161,7 @@ public class SettlementResource {
         while (true) {
 
             if (userAnnexDTO.getInviterId() != null && userAnnexDTO.getType() == 5) {
-                 inviterUser = userService.getUserAnnex(inviterId).getBody();
+                inviterUser = userService.getUserAnnex(inviterId).getBody();
                 break;
             } else if (inviterUser.getInviterId()==null){
                 break;
@@ -287,14 +287,13 @@ public class SettlementResource {
             if (annexDTO.getInviterId() != null && annexDTO.getInviterId()!=0) {
                 //直接邀请人
                 UserAnnexDTO OneuserAnnexB = userService.getUserAnnex(annexDTO.getInviterId()).getBody();
-                if (annexDTO.getType()==3 || annexDTO.getType()==4){
+                if (OneuserAnnexB.getType()==3 || OneuserAnnexB.getType()==4){
                     SettlementWalletDTO   ServiceInviterB = new SettlementWalletDTO ();
                     ServiceInviterB.setUserid(OneuserAnnexB.getId());
                     ServiceInviterB.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.1)));
                     ServiceInviterB.setType(5);
                     list.add(ServiceInviterB);
                     System.out.println("*****************给直接邀请人加积分***************"+ServiceInviterB.getAmount());
-
                 }else {
                     //加现金奖励
                     if (OneuserAnnexB.getType()==5){
@@ -303,9 +302,8 @@ public class SettlementResource {
                         ServiceTradingFeeB.setAmount(TradingFee);
                         ServiceTradingFeeB.setType(7);
                         list.add(ServiceTradingFeeB);
-                        System.out.println("服务商加奖金");
+                        System.out.println("服务商加奖金************************************************************");
                     }
-
                     //加积分
                     SettlementWalletDTO   ServiceB = new SettlementWalletDTO ();
                     ServiceB.setUserid(OneuserAnnexB.getId());
@@ -313,11 +311,10 @@ public class SettlementResource {
                     ServiceB.setType(5);
                     list.add(ServiceB);
                 }
-
                 if (OneuserAnnexB.getInviterId() != null && OneuserAnnexB.getInviterId()!=0) {
                     //间接邀请人
                     UserAnnexDTO twouserAnnexB = userService.getUserAnnex(OneuserAnnexB.getInviterId()).getBody();
-                    if (annexDTO.getType()==3 || annexDTO.getType()==4){
+                    if (twouserAnnexB.getType()==3 || twouserAnnexB.getType()==4){
                         SettlementWalletDTO   ServiceTwoInviterB = new SettlementWalletDTO ();
                         ServiceTwoInviterB.setUserid(twouserAnnexB.getId());
                         ServiceTwoInviterB.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.1)));
@@ -332,7 +329,7 @@ public class SettlementResource {
                             ServiceTradingFee.setAmount(TradingFee);
                             ServiceTradingFee.setType(8);
                             list.add(ServiceTradingFee);
-                            System.out.println("服务商加奖金");
+                            System.out.println("服务商加奖金---------------------------------------------------------->");
                         }
                         //加积分
                         SettlementWalletDTO   ServiceTwoInviterE = new SettlementWalletDTO ();
@@ -340,13 +337,12 @@ public class SettlementResource {
                         ServiceTwoInviterE.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.2)));
                         ServiceTwoInviterE.setType(6);
                         list.add(ServiceTwoInviterE);
-
+                        System.out.println("服务商加积分------------------------------------------------------------->");
                     }
                 }
             }
             walletService.batchintegrals(list);
             return ResponseEntity.ok().body("ok");
-
         }
         return ResponseEntity.ok().body("fai");
     }
