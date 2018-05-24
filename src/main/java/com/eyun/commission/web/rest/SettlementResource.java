@@ -268,7 +268,7 @@ public class SettlementResource {
                         ServiceE.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.2)));
                         list.add(ServiceE);
 
-                    }else if (OneuserAnnexB.getType()==3 ||OneuserAnnexB.getType()==4){
+                    }else if (OneuserAnnexB.getType()==3 ||OneuserAnnexB.getType()==4 ||OneuserAnnexB.getType()==2 || OneuserAnnexB.getType()==1){
                         //加积分
                         SettlementWalletDTO   ServiceB = new SettlementWalletDTO ();
                         ServiceB.setUserid(OneuserAnnexB.getId());
@@ -305,7 +305,7 @@ public class SettlementResource {
                             list.add(ServiceTwoInviterL);
                             System.out.println("服务商加积分---------------------------------------------------------->");
 
-                        } else if (twouserAnnexB.getType()==3 || twouserAnnexB.getType()==4){
+                        } else if (twouserAnnexB.getType()==3 || twouserAnnexB.getType()==4 || twouserAnnexB.getType()==2 || twouserAnnexB.getType()==4){
 
                             SettlementWalletDTO   ServiceTwoInviterE = new SettlementWalletDTO ();
                             ServiceTwoInviterE.setUserid(twouserAnnexB.getId());
