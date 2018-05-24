@@ -2,6 +2,7 @@ package com.eyun.commission.service.impl;
 
 import com.eyun.commission.service.UserService;
 import com.eyun.commission.service.WalletService;
+import com.eyun.commission.service.dto.CommissionDTO;
 import com.eyun.commission.service.dto.SettlementWalletDTO;
 import com.eyun.commission.service.dto.UserAnnexDTO;
 import org.slf4j.Logger;
@@ -57,7 +58,7 @@ public class CommissionServiceImpl implements CommissionService {
 
 
     @Override
-    public String handleFacilitatorWallet(Long shopId, BigDecimal payment, String orderNo) throws Exception {
+    public String handleFacilitatorWallet(Long shopId, BigDecimal payment, String orderNo,BigDecimal transfer) throws Exception {
         Integer count = 0;
         Long userid = userService.getShopIdFindByUserid(shopId).getBody();
         UserAnnexDTO userAnnexDTO = userService.getUserAnnex(userid).getBody();
@@ -66,14 +67,16 @@ public class CommissionServiceImpl implements CommissionService {
             userAnnexDTO = userService.getUserAnnex(inviterId).getBody();
             if (userAnnexDTO.getType() == 5) {//该商户在服务商直接体系内
                 count++;
-                SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
-                settlementWalletDTO.setOrderNo(orderNo);
-                settlementWalletDTO.setUserid(userAnnexDTO.getId());
+                CommissionDTO commissionDTO = new CommissionDTO();
+                commissionDTO.setOrderNo(orderNo);
+                commissionDTO.setUserid(userAnnexDTO.getId());
                 DecimalFormat df = new DecimalFormat("0.00");
                 Double amond = payment.doubleValue();
                 BigDecimal decimal = new BigDecimal(df.format((double) amond * 0.004));
-                settlementWalletDTO.setAmount(decimal);
-                walletService.commissionCash(settlementWalletDTO);
+                commissionDTO.setAmount(decimal);
+                BigDecimal tra = new BigDecimal(df.format((double) transfer.doubleValue() * 0.2));
+                commissionDTO.setIntegral(tra);
+                walletService.commissionCash(commissionDTO);
             }
             while (true) {
                 inviterId = userAnnexDTO.getInviterId();
@@ -85,63 +88,17 @@ public class CommissionServiceImpl implements CommissionService {
                     continue;
                 }
                 count++;
-                SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
-                settlementWalletDTO.setOrderNo(orderNo);
-                settlementWalletDTO.setUserid(userAnnexDTO.getId());
+                CommissionDTO commissionDTO = new CommissionDTO();
+                commissionDTO.setOrderNo(orderNo);
+                commissionDTO.setUserid(userAnnexDTO.getId());
                 DecimalFormat df = new DecimalFormat("0.00");
-                Double amond = payment.doubleValue();
-                BigDecimal decimal = new BigDecimal(df.format((double) amond * 0.004));
-                settlementWalletDTO.setAmount(decimal);
-                walletService.commissionCash(settlementWalletDTO);
+                BigDecimal decimal = new BigDecimal(df.format(payment.doubleValue() * 0.004));
+                commissionDTO.setAmount(decimal);
+                BigDecimal tra = new BigDecimal(df.format(transfer.doubleValue() * 0.2));
+                commissionDTO.setIntegral(tra);
+                walletService.commissionCash(commissionDTO);
                 if (count == 2) {
                     break;
-                }
-            }
-
-            return "success";
-        }
-        return "faild";
-    }
-
-    @Override
-    public String handleServiceCharge(Long userId, BigDecimal payment, String orderNo) throws Exception {
-        Integer count = 0;
-        UserAnnexDTO userAnnexDTO = userService.getUserAnnex(userId).getBody();
-        Long inviterId = userAnnexDTO.getInviterId();
-        if (inviterId != null) {
-            userAnnexDTO = userService.getUserAnnex(inviterId).getBody();
-            if (userAnnexDTO.getType() == 5) {//该商户在服务商直接体系内
-                count++;
-                SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
-                settlementWalletDTO.setOrderNo(orderNo);
-                settlementWalletDTO.setUserid(userAnnexDTO.getId());
-                DecimalFormat df = new DecimalFormat("0.00");
-                Double amond = payment.doubleValue();
-                BigDecimal decimal = new BigDecimal(df.format((double) amond * 0.2));
-                settlementWalletDTO.setAmount(decimal);
-                walletService.commissionCash(settlementWalletDTO);
-            } else {//该商户在服务商间接体系内
-                while (true) {
-                    inviterId = userAnnexDTO.getInviterId();
-                    if (inviterId == null) {
-                        break;
-                    }
-                    userAnnexDTO = userService.getUserAnnex(inviterId).getBody();
-                    if (userAnnexDTO.getType() != 5) {
-                        continue;
-                    }
-                    count++;
-                    SettlementWalletDTO settlementWalletDTO = new SettlementWalletDTO();
-                    settlementWalletDTO.setOrderNo(orderNo);
-                    settlementWalletDTO.setUserid(userAnnexDTO.getId());
-                    DecimalFormat df = new DecimalFormat("0.00");
-                    Double amond = payment.doubleValue();
-                    BigDecimal decimal = new BigDecimal(df.format((double) amond * 0.2));
-                    settlementWalletDTO.setAmount(decimal);
-                    walletService.commissionCash(settlementWalletDTO);
-                    if (count == 2) {
-                        break;
-                    }
                 }
             }
             return "success";
