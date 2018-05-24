@@ -215,6 +215,16 @@ public class SettlementResource {
                 BigDecimal bUserjifen = formparamsDTO.getTransferAmount().multiply(new BigDecimal("2"));
                 bsettlementWallet.setAmount(bUserjifen);
                 list.add(bsettlementWallet);
+            }else if (annexDTO.getType() == 5){
+
+                //给当前商户加积分
+                SettlementWalletDTO   bsettlementWalletService = new SettlementWalletDTO ();
+                bsettlementWalletService.setUserid(formparamsDTO.getUserId());
+                bsettlementWalletService.setType(4);
+                BigDecimal bUserjifenService = formparamsDTO.getTransferAmount().multiply(new BigDecimal("2"));
+                bsettlementWalletService.setAmount(bUserjifenService);
+                list.add(bsettlementWalletService);
+
             }
             System.out.println("消费者支线-------------------------------------------------------------------------->");
             //消费者支线
