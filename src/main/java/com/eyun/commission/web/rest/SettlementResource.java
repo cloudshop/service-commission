@@ -303,13 +303,22 @@ public class SettlementResource {
                         ServiceTradingFeeB.setType(7);
                         list.add(ServiceTradingFeeB);
                         System.out.println("服务商加奖金************************************************************");
+
+                        //加积分
+                        SettlementWalletDTO   ServiceE = new SettlementWalletDTO ();
+                        ServiceE.setUserid(OneuserAnnexB.getId());
+                        ServiceE.setType(5);
+                        ServiceE.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.2)));
+                        list.add(ServiceE);
+
+                    }else if (OneuserAnnexB.getType()==3 ||OneuserAnnexB.getType()==4){
+                        //加积分
+                        SettlementWalletDTO   ServiceB = new SettlementWalletDTO ();
+                        ServiceB.setUserid(OneuserAnnexB.getId());
+                        ServiceB.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.1)));
+                        ServiceB.setType(5);
+                        list.add(ServiceB);
                     }
-                    //加积分
-                    SettlementWalletDTO   ServiceB = new SettlementWalletDTO ();
-                    ServiceB.setUserid(OneuserAnnexB.getId());
-                    ServiceB.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.1)));
-                    ServiceB.setType(5);
-                    list.add(ServiceB);
                 }
                 if (OneuserAnnexB.getInviterId() != null && OneuserAnnexB.getInviterId()!=0) {
                     //间接邀请人
@@ -330,14 +339,23 @@ public class SettlementResource {
                             ServiceTradingFee.setType(8);
                             list.add(ServiceTradingFee);
                             System.out.println("服务商加奖金---------------------------------------------------------->");
+
+                            //加积分
+                            SettlementWalletDTO   ServiceTwoInviterL = new SettlementWalletDTO ();
+                            ServiceTwoInviterL.setUserid(twouserAnnexB.getId());
+                            ServiceTwoInviterL.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.2)));
+                            ServiceTwoInviterL.setType(6);
+                            list.add(ServiceTwoInviterL);
+                            System.out.println("服务商加积分---------------------------------------------------------->");
+
+                        } else if (twouserAnnexB.getType()==3 || twouserAnnexB.getType()==4){
+
+                            SettlementWalletDTO   ServiceTwoInviterE = new SettlementWalletDTO ();
+                            ServiceTwoInviterE.setUserid(twouserAnnexB.getId());
+                            ServiceTwoInviterE.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.1)));
+                            ServiceTwoInviterE.setType(6);
+                            list.add(ServiceTwoInviterE);
                         }
-                        //加积分
-                        SettlementWalletDTO   ServiceTwoInviterE = new SettlementWalletDTO ();
-                        ServiceTwoInviterE.setUserid(twouserAnnexB.getId());
-                        ServiceTwoInviterE.setAmount(formparamsDTO.getTransferAmount().multiply(new BigDecimal(0.1)));
-                        ServiceTwoInviterE.setType(6);
-                        list.add(ServiceTwoInviterE);
-                        System.out.println("服务商加积分------------------------------------------------------------->");
                     }
                 }
             }
