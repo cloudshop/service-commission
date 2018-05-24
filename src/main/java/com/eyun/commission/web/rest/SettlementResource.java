@@ -55,7 +55,7 @@ public class SettlementResource {
 	 */
 
 	@PostMapping("/order/settlement/{orderNo}")
-	public void orderSettlement(@PathVariable("orderNo") String orderNo) throws Exception {
+	public void orderSettlement(@PathVariable ("orderNo") String orderNo) throws Exception {
 		ResponseEntity<ProOrderDTO> resp = orderService.findOrderByOrderNo(orderNo);
 		if (404 == resp.getStatusCodeValue() || resp.getBody().getStatus() != 4) { //校验订单状态
 			throw new BadRequestException("订单异常");
